@@ -1,6 +1,10 @@
 # 輕前端 Vue Component 範例
 
-## [Date Picker](https://ragnakuei.github.io/vue-components/date%20picker.html)
+## Web Component
+
+## Vue Component
+
+### [Date Picker](https://ragnakuei.github.io/vue-components/date%20picker.html)
 
 - Date Picker
   - 相依套件
