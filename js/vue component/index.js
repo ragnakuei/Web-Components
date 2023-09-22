@@ -1,6 +1,8 @@
 const {createApp, ref, reactive, watch, computed, onMounted} = Vue;
 
-const app = createApp({
+createApp({
+    components: {
+    },
     setup() {
 
         onMounted(() => {
@@ -8,7 +10,4 @@ const app = createApp({
 
         return {};
     },
-});
-
-app.component("vue_nav", vue_nav);
-app.mount("#app");
+}).mount("#app");
