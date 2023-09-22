@@ -1,0 +1,120 @@
+.wysiwyg {
+  border: 1px solid #747474;
+  border-radius: 6px;
+  box-shadow: 10px 10px 20px #e4e4e4;
+}
+.wysiwyg .toolbar {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  margin: 10px;
+}
+
+.wysiwyg button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+
+  background-color: unset;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 20px 20px;
+}
+
+.wysiwyg button:hover {
+  background-color: #bbbbbb;
+}
+
+.wysiwyg button.undo {
+  background-image: url(../images/rotate-left-solid.svg);
+}
+.wysiwyg button.redo {
+  background-image: url(../images/rotate-right-solid.svg);
+}
+.wysiwyg .delimiter {
+  width: 1px;
+  border: 1px solid #747474;
+  background-color: black;
+}
+
+.wysiwyg .copy {
+  background-image: url(../images/copy-svgrepo-com.svg);
+  background-size: 25px 25px;
+}
+.wysiwyg .cut {
+  background-image: url(../images/cut-svgrepo-com.svg);
+  background-size: 25px 25px;
+}
+.wysiwyg .paste {
+  background-image: url(../images/paste-svgrepo-com.svg);
+  background-size: 30px 30px;
+}
+.wysiwyg .delete {
+  background-image: url(../images/cross-svgrepo-com.svg);
+}
+.wysiwyg .select-all {
+  background-image: url(../images/select-all-svgrepo-com.svg);
+  background-size: 30px 30px;
+}
+
+.wysiwyg .underline {
+  background-image: url(../images/underline-4-svgrepo-com.svg);
+}
+.wysiwyg .italic {
+  background-image: url(../images/italic-solid.svg);
+}
+.wysiwyg .bold {
+  background-image: url(../images/bold-solid.svg);
+}
+.wysiwyg .link {
+  background-image: url(../images/link-solid.svg);
+}
+.wysiwyg .image-content {
+  background-image: url(../images/image-up-svgrepo-com.svg);
+}
+.wysiwyg .image-link {
+  background-image: url(../images/image-left-svgrepo-com.svg);
+}
+.wysiwyg .font-color {
+  background-image: url(../images/droplet-solid.svg);
+}
+.wysiwyg .strikethrough {
+  background-image: url(../images/strikethrough-solid.svg);
+}
+.wysiwyg .xcross {
+  background-image: url(../images/xmark-solid.svg);
+}
+.wysiwyg .check {
+  background-image: url(../images/check-solid.svg);
+}
+.wysiwyg .reset {
+  background-image: url(../images/trash-can-solid.svg);
+}
+.wysiwyg .align-left {
+  background-image: url(../images/align-left-svgrepo-com.svg);
+}
+.wysiwyg .align-center {
+  background-image: url(../images/align-center-svgrepo-com.svg);
+}
+.wysiwyg .align-right {
+  background-image: url(../images/align-right-svgrepo-com.svg);
+}
+
+.wysiwyg hr {
+  margin: 0;
+}
+
+.wysiwyg .editor {
+  padding: 10px;
+  width: 100%;
+}
+
+.wysiwyg .footer {
+  margin: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 15px;
+}
