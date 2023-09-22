@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous"/>
+    <link href="/css/site.css?2022122701" rel="stylesheet"/>
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self'; style-src 'self' ; ">
+    <!-- 
+        如果不要給定 CSP style-src 的話，那就無法設定 Web Component 中的 Style，相對也無法使用 Shadow DOM + SLOT 了 !  
+    -->
+</head>
+<body>
+
+<div class="container">
+    <h2>Pager</h2>
+    <div class="d-flex flex-wrap">
+        <div>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Price</th>
+                </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+            <wc-pager id="pager" page-size="10"></wc-pager>
+            <wc-s-pager id="s-pager" page-size="10"></wc-s-pager>
+
+
+        </div>
+    </div>
+</div>
+
+<script src="/js/web component/wc-pager.js?20230100602"></script>
+<script src="/js/web component/wc-s-pager.js?20230100602"></script>
+<script src="/js/web component/pager.js?20230100602"></script>
+
+</body>
+</html>
