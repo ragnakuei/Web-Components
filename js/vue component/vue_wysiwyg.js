@@ -3,27 +3,27 @@ const wysiwyg = {
 <div class="wysiwyg" >
     <div class="toolbar">
 
-        <button class="item undo" v-on:click="doc_execCommand('undo')" title="undo"></button>
-        <button class="item redo" v-on:click="doc_execCommand('redo')" title="redo"></button>
+        <button type="button" class="item undo" v-on:click="doc_execCommand('undo')" title="undo"></button>
+        <button type="button" class="item redo" v-on:click="doc_execCommand('redo')" title="redo"></button>
         <div class="item delimiter"></div>
 
-        <button class="item copy" v-on:click="doc_execCommand('copy')" title="copy"></button>
-        <button class="item cut" v-on:click="doc_execCommand('cut')" title="cut"></button>
-        <button class="item paste" v-on:click="doc_execCommand('paste')" title="paste"></button>
-        <button class="item delete" v-on:click="doc_execCommand('delete')" title="delete"></button>
-        <button class="item select-all" v-on:click="doc_execCommand('selectAll')" title="select all"></button>
+        <button type="button" class="item copy" v-on:click="doc_execCommand('copy')" title="copy"></button>
+        <button type="button" class="item cut" v-on:click="doc_execCommand('cut')" title="cut"></button>
+        <button type="button" class="item paste" v-on:click="doc_execCommand('paste')" title="paste"></button>
+        <button type="button" class="item delete" v-on:click="doc_execCommand('delete')" title="delete"></button>
+        <button type="button" class="item select-all" v-on:click="doc_execCommand('selectAll')" title="select all"></button>
         <div class="item delimiter"></div>
 
-        <button class="item underline" v-on:click="doc_execCommand('underline')"></button>
-        <button class="item italic" v-on:click="doc_execCommand('italic')"></button>
-        <button class="item bold" v-on:click="doc_execCommand('bold')"></button>
-        <button class="item strikethrough" v-on:click="doc_execCommand('strikeThrough')"></button>
+        <button type="button" class="item underline" v-on:click="doc_execCommand('underline')"></button>
+        <button type="button" class="item italic" v-on:click="doc_execCommand('italic')"></button>
+        <button type="button" class="item bold" v-on:click="doc_execCommand('bold')"></button>
+        <button type="button" class="item strikethrough" v-on:click="doc_execCommand('strikeThrough')"></button>
         <div class="item delimiter"></div>
 
-        <button class="item font-color" v-on:click="changeFontColor()"></button>
+        <button type="button" class="item font-color" v-on:click="changeFontColor()"></button>
         <div class="item delimiter"></div>
 
-        <button class="item link" v-on:click="insert_link()"></button>
+        <button type="button" class="item link" v-on:click="insert_link()"></button>
         <input type="file" 
                accept="image/*" 
                style="display: none;" 
@@ -31,14 +31,14 @@ const wysiwyg = {
                v-on:change="insert_image($event.target)"
                ref="insert_image_dom"
                >
-        <button class="item image-content" for="insert_image" title="Upload Image" v-on:click="insert_image_dom.click()"></button>
-        <button class="item image-link" v-on:click="insert_image_url()" title="Insert Image Url"></button>
+        <button type="button" class="item image-content" for="insert_image" title="Upload Image" v-on:click="insert_image_dom.click()"></button>
+        <button type="button" class="item image-link" v-on:click="insert_image_url()" title="Insert Image Url"></button>
         <div class="item delimiter"></div>
 
         <!-- Jutify -->
-        <button class="item align-left" v-on:click="doc_execCommand('justifyLeft')"></button>
-        <button class="item align-center" v-on:click="doc_execCommand('justifyCenter')"></button>
-        <button class="item align-right" v-on:click="doc_execCommand('justifyRight')"></button>
+        <button type="button" class="item align-left" v-on:click="doc_execCommand('justifyLeft')"></button>
+        <button type="button" class="item align-center" v-on:click="doc_execCommand('justifyCenter')"></button>
+        <button type="button" class="item align-right" v-on:click="doc_execCommand('justifyRight')"></button>
     </div>
     <hr />
     <div class="editor" 
@@ -47,8 +47,8 @@ const wysiwyg = {
     </div>
     <hr />
     <div class="footer">
-        <button class="item xcross" v-on:click="reset()"></button>
-        <button class="item check" v-on:click="apply()"></button>
+        <button type="button" class="item xcross" v-on:click="reset()"></button>
+        <button type="button" class="item check" v-on:click="apply()"></button>
     </div>
 </div>
           `,
