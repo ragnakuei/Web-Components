@@ -20,7 +20,7 @@ const wysiwyg = {
         <button type="button" class="item strikethrough" v-on:click="doc_execCommand('strikeThrough')"></button>
         <div class="item delimiter"></div>
 
-        <button type="button" class="item font-color" v-on:click="changeFontColor()"></button>
+        <input type="color" v-on:blur="changeFontColor($event.target.value)" />
         <div class="item delimiter"></div>
 
         <button type="button" class="item link" v-on:click="insert_link()"></button>
@@ -42,13 +42,10 @@ const wysiwyg = {
     </div>
     <hr />
     <div class="editor" 
-         ref="editor_dom" contenteditable
+         ref="editor_dom" 
+         v-on:blur="apply()"
+         contenteditable
     >
-    </div>
-    <hr />
-    <div class="footer">
-        <button type="button" class="item xcross" v-on:click="reset()"></button>
-        <button type="button" class="item check" v-on:click="apply()"></button>
     </div>
 </div>
           `,
@@ -62,12 +59,22 @@ const wysiwyg = {
       document.execCommand(command, showUI, value);
     };
 
-    const insert_link = function () {
-      const url = prompt("Enter the link here: ", "https://");
-      if (url) {
-        doc_execCommand("createLink", false, url);
+      const insert_link = function () {
+        const url = prompt("Enter the link here: ", "https://");
+        if (url) {
+          insertLinkToRange(url);
+        }
+      };
+      function insertLinkToRange(url) {
+        const a = document.createElement("a");
+        a.href = url;
+        a.innerText = url;
+        
+        // get current cursor position
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        range.insertNode(a);
       }
-    };
 
     const insert_image_dom = ref(null);
     const insert_image = function (target) {
@@ -134,22 +141,20 @@ const wysiwyg = {
       }
     }
 
-    const changeFontColor = function () {
+    const changeFontColor = function (color) {
+      // console.log("changeFontColor", color);
+      
       // check selection
       const selection = window.getSelection();
       if (selection.rangeCount === 0) {
         return;
       }
 
-      const color = prompt("Enter the font color here: ", "#");
       if (color) {
         doc_execCommand("foreColor", false, color);
+        selection.removeAllRanges();
+        editor_dom.value.blur();
       }
-    };
-
-    const reset = function () {
-      // 重新初始化編輯器的內容為傳入的 modelValue
-      editor_dom.value.innerHTML = props.modelValue;
     };
 
     const apply = function () {
@@ -168,7 +173,6 @@ const wysiwyg = {
       insert_image_dom,
       insert_image_url,
       changeFontColor,
-      reset,
       apply,
     };
   },
