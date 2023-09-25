@@ -1,6 +1,7 @@
-const wysiwyg = {
-  template: `
-<div class="wysiwyg" >
+  window.vue_wysiwyg = window.vue_wysiwyg || {
+    template: `
+<div class="wysiwyg" 
+     v-on:mouseleave="apply">
     <div class="toolbar">
 
         <button type="button" class="item undo" v-on:click="doc_execCommand('undo')" title="undo"></button>
@@ -21,9 +22,8 @@ const wysiwyg = {
         <div class="item delimiter"></div>
 
         <input type="color" v-on:blur="changeFontColor($event.target.value)" />
-        <div class="item delimiter"></div>
-
         <button type="button" class="item link" v-on:click="insert_link()"></button>
+
         <input type="file" 
                accept="image/*" 
                style="display: none;" 
@@ -31,7 +31,7 @@ const wysiwyg = {
                v-on:change="insert_image($event.target)"
                ref="insert_image_dom"
                >
-        <button type="button" class="item image-content" for="insert_image" title="Upload Image" v-on:click="insert_image_dom.click()"></button>
+        <button type="button" class="item image-content" for="insert_image" title="Upload Image" v-on:click="click_insert_image_dom()"></button>
         <button type="button" class="item image-link" v-on:click="insert_image_url()" title="Insert Image Url"></button>
         <div class="item delimiter"></div>
 
@@ -42,13 +42,13 @@ const wysiwyg = {
     </div>
     <hr />
     <div class="editor" 
-         ref="editor_dom" 
-         v-on:blur="apply()"
+         ref="editor_dom"
          contenteditable
+         v-html="modelValue"
     >
     </div>
 </div>
-          `,
+        `,
   props: {
     modelValue: String,
   },
@@ -59,25 +59,45 @@ const wysiwyg = {
       document.execCommand(command, showUI, value);
     };
 
-      const insert_link = function () {
-        const url = prompt("Enter the link here: ", "https://");
-        if (url) {
-          insertLinkToRange(url);
-        }
-      };
-      function insertLinkToRange(url) {
-        const a = document.createElement("a");
-        a.href = url;
-        a.innerText = url;
-        
-        // get current cursor position
-        const selection = window.getSelection();
-        const range = selection.getRangeAt(0);
-        range.insertNode(a);
+    const insert_link = function () {
+      if(isSelectionOrFocusInEditor() === false) {
+        alert('請先點擊編輯區域 !');
+        return;
       }
+      
+      const url = prompt("Enter the link here: ", "https://");
+      if (url) {
+        insertLinkToRange(url);
+      }
+    };
+    function insertLinkToRange(url) {
+      const a = document.createElement("a");
+      a.href = url;
+      a.innerText = url;
+      
+      // get current cursor position
+      const selection = window.getSelection();
+      const range = selection.getRangeAt(0);
+      range.insertNode(a);
+      
+    }
 
     const insert_image_dom = ref(null);
+    const click_insert_image_dom = function () {
+      if(isSelectionOrFocusInEditor() === false) {
+        alert('請先點擊編輯區域 !');
+        return;
+      }
+
+      insert_image_dom.value.click();
+    };
     const insert_image = function (target) {
+      
+      if(isSelectionOrFocusInEditor() === false) {
+        alert('請先點擊編輯區域 !');
+        return;
+      }
+      
       const file = target.files[0];
       const reader = new FileReader();
 
@@ -106,6 +126,12 @@ const wysiwyg = {
     };
 
     const insert_image_url = function () {
+
+      if(isSelectionOrFocusInEditor() === false) {
+        alert('請先點擊編輯區域 !');
+        return;
+      }
+      
       const url = prompt("Enter the image url here: ", "https://picsum.photos/200");
       if (!url) {
         return;
@@ -119,9 +145,7 @@ const wysiwyg = {
     };
 
     function insertImageToRange(img) {
-      // insert img tag to selection
       const selection = window.getSelection();
-      // console.log('selection', selection);
 
       if (selection.rangeCount !== 0) {
         // with selection
@@ -153,16 +177,35 @@ const wysiwyg = {
       if (color) {
         doc_execCommand("foreColor", false, color);
         selection.removeAllRanges();
-        editor_dom.value.blur();
       }
     };
-
+    
     const apply = function () {
       emit("update:modelValue", editor_dom.value.innerHTML);
     };
+    
+    function isSelectionOrFocusInEditor() {
+      const selection = window.getSelection();
+      // console.log('selection', selection);
 
+      if (selection.rangeCount !== 0) {
+        // console.log('has selection rangeCount', selection.rangeCount);
+        // with selection
+
+        let selectionDom = selection.getRangeAt(0).commonAncestorContainer;
+        while(selectionDom) {
+          if(selectionDom === editor_dom.value) {
+            return true;
+          }
+          
+          selectionDom = selectionDom.parentNode;
+        }
+      }
+
+      return false;
+    }
+    
     onMounted(() => {
-      editor_dom.value.innerHTML = props.modelValue;
     });
 
     return {
@@ -171,6 +214,7 @@ const wysiwyg = {
       insert_link,
       insert_image,
       insert_image_dom,
+      click_insert_image_dom,
       insert_image_url,
       changeFontColor,
       apply,
