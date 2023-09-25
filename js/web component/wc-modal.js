@@ -85,6 +85,10 @@ window.customElements.define('wc-modal', class extends HTMLElement {
     </div>
 </div>
     `;
+        // 此 web component 預設不顯示 display: none;，在初始化前就不會有閃爍的問題 
+        // 在 connectedCallback 時，就可以顯示了
+        this.style.display = 'block';
+        
         this.modalInstance = this.shadowRoot.querySelector('.modal');
         this.modalDialogInstance = this.shadowRoot.querySelector('.modal-dialog');
 
