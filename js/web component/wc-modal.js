@@ -133,8 +133,7 @@ window.customElements.define('wc-modal', class extends HTMLElement {
 
         if (this.vertical) {
             this.addCssClass(this.modalDialogInstance, 'verticial-centered-fadein');
-        }
-        {
+        } else {
             this.addCssClass(this.modalDialogInstance, 'fadein');
         }
 
