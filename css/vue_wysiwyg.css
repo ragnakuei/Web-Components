@@ -11,8 +11,8 @@
 }
 
 .wysiwyg button {
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   padding: 0;
   border: 0;
   cursor: pointer;
@@ -20,7 +20,7 @@
   background-color: unset;
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: 20px 20px;
+  background-size: 20px;
 }
 
 .wysiwyg button:hover {
@@ -41,47 +41,52 @@
 
 .wysiwyg .copy {
   background-image: url(../images/copy-svgrepo-com.svg);
-  background-size: 25px 25px;
+  background-size: 20px;
 }
 .wysiwyg .cut {
   background-image: url(../images/cut-svgrepo-com.svg);
-  background-size: 25px 25px;
+  background-size: 20px;
 }
 .wysiwyg .paste {
   background-image: url(../images/paste-svgrepo-com.svg);
-  background-size: 30px 30px;
+  background-size: 24px;
 }
 .wysiwyg .delete {
   background-image: url(../images/cross-svgrepo-com.svg);
+  background-size: 18px;
 }
 .wysiwyg .select-all {
   background-image: url(../images/select-all-svgrepo-com.svg);
-  background-size: 30px 30px;
+  background-size: 25px;
 }
 
 .wysiwyg .underline {
   background-image: url(../images/underline-4-svgrepo-com.svg);
+  background-size: 20px;
 }
 .wysiwyg .italic {
   background-image: url(../images/italic-solid.svg);
+  background-size: 15px;
 }
 .wysiwyg .bold {
   background-image: url(../images/bold-solid.svg);
-}
-.wysiwyg .link {
-  background-image: url(../images/link-solid.svg);
-}
-.wysiwyg .image-content {
-  background-image: url(../images/image-up-svgrepo-com.svg);
-}
-.wysiwyg .image-link {
-  background-image: url(../images/image-left-svgrepo-com.svg);
-}
-.wysiwyg .font-color {
-  background-image: url(../images/droplet-solid.svg);
+  background-size: 15px;
 }
 .wysiwyg .strikethrough {
   background-image: url(../images/strikethrough-solid.svg);
+  background-size: 20px;
+}
+.wysiwyg .link {
+  background-image: url(../images/link-solid.svg);
+  background-size: 21px;
+}
+.wysiwyg .image-content {
+  background-image: url(../images/image-up-svgrepo-com.svg);
+  background-size: 23px;
+}
+.wysiwyg .image-link {
+  background-image: url(../images/image-left-svgrepo-com.svg);
+  background-size: 23px;
 }
 .wysiwyg .xcross {
   background-image: url(../images/xmark-solid.svg);
@@ -94,12 +99,15 @@
 }
 .wysiwyg .align-left {
   background-image: url(../images/align-left-svgrepo-com.svg);
+  background-size: 25px;
 }
 .wysiwyg .align-center {
   background-image: url(../images/align-center-svgrepo-com.svg);
+  background-size: 25px;
 }
 .wysiwyg .align-right {
   background-image: url(../images/align-right-svgrepo-com.svg);
+  background-size: 25px;
 }
 
 .wysiwyg hr {
