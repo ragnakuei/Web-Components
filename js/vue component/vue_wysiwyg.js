@@ -43,6 +43,7 @@
     <hr />
     <div class="editor" 
          ref="editor_dom"
+         v-on:blur="apply"
          contenteditable
          v-html="modelValue"
     >
