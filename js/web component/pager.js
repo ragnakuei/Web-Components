@@ -9,8 +9,8 @@ const [
                       "s-pager"
                   ] );
 
-pager.addCustomEventListener( 'onChangePageNo', ( e, d ) => toPage( d ) );
-spager.addCustomEventListener( 'onChangePageNo', ( e, d ) => toPage( d ) );
+pager.addCustomEventListener( 'onChangePageNo', d => toPage( d ) );
+spager.addCustomEventListener( 'onChangePageNo', d => toPage( d ) );
 
 const bookRowTemplate = extractTemplate( "bookRowTemplate" );
 
