@@ -1,8 +1,8 @@
-window.customElements.define('wc-modal', class extends HTMLElement {
+window.customElements.define( 'wc-modal', class extends HTMLElement {
     // lifecycle hooks
     constructor() {
         super();
-        this.shadowRoot = this.attachShadow({mode: "open"})
+        this.shadowRoot = this.attachShadow( { mode: "open" } )
     }
 
     connectedCallback() {
@@ -109,148 +109,143 @@ window.customElements.define('wc-modal', class extends HTMLElement {
         </div>
 </div>
     `;
-        // 此 web component 預設不顯示 display: none;，在初始化前就不會有閃爍的問題 
+        // 此 web component 預設不顯示;，在初始化前就不會有閃爍的問題 
         // 在 connectedCallback 時，就可以顯示了
-        this.classList.remove('hidden');
-        
-        this.modalInstance = this.shadowRoot.querySelector('.modal');
-        this.modalDialogInstance = this.shadowRoot.querySelector('.modal-dialog');
+        this.classList.remove( 'hidden' );
 
-        if (this.size) {
-            this.addCssClass(this.modalDialogInstance, this.size);
+        this._modalDom = this.shadowRoot.querySelector( '.modal' );
+        this._modalDialogDom = this.shadowRoot.querySelector( '.modal-dialog' );
+
+        if ( this.size ) {
+            this._modalDialogDom.classList.add( this.size );
         }
 
-        if (this.vertical) {
-            this.addCssClass(this.modalDialogInstance, 'vertical-centered');
+        if ( this.vertical ) {
+            this._modalDialogDom.classList.add( 'vertical-centered' );
         }
 
     }
 
     // fields
     _tabbableElements = [];
+    _modalDom = null;
+    _modalDialogDom = null;
 
     // property
     shadowRoot = null;
-    modalInstance = null;
-    modalDialogInstance = null;
 
     get id() {
-        return this.getAttribute('id');
+        return this.getAttribute( 'id' );
     }
 
     get size() {
         // available values: sm, md, lg, xl, (未指定) 全寬
-        return this.getAttribute('size');
+        return this.getAttribute( 'size' );
     }
 
     get vertical() {
         // 如果未給定 attribute 則回傳 null，反之回傳 ""
-        return this.getAttribute('vertical') != null;
+        return this.getAttribute( 'vertical' ) != null;
     }
 
     // functions
-    show = () => {
-        console.log('show', this.id);
-        console.log('vertial', this.vertical);
+    Show = () => {
+        // console.log( 'show', this.id );
+        // console.log( 'vertial', this.vertical );
 
-        this.modalInstance.classList.remove('hidden');
+        this._modalDom.classList.remove( 'hidden' );
 
-        if (this.vertical) {
-            this.addCssClass(this.modalDialogInstance, 'verticial-centered-fadein');
+        if ( this.vertical ) {
+            this._modalDialogDom.classList.add( 'verticial-centered-fadein' );
         } else {
-            this.addCssClass(this.modalDialogInstance, 'fadein');
+            this._modalDialogDom.classList.add( 'fadein' );
         }
 
-        const slot = this.shadowRoot.querySelector('slot');
-        const slotNodes = slot.assignedNodes().filter(node => node.nodeType === Node.ELEMENT_NODE);
-        this._tabbableElements = this.findTabbableElements(slotNodes[0]);
+        const slot = this.shadowRoot.querySelector( 'slot' );
+        const slotNodes = slot.assignedNodes().filter( node => node.nodeType === Node.ELEMENT_NODE );
+        this._tabbableElements = this._findTabbableElements( slotNodes[0] );
 
         // focus 第一個 tabbable element
         this._tabbableElements[0]?.focus();
 
         // 監聽 tab 鍵，只能在 tabbable elements 中循環
-        this.modalInstance.addEventListener('keydown', this.enableTabOnlyInTabbableElements);
+        this._modalDom.addEventListener( 'keydown', this._enableTabOnlyInTabbableElements );
     }
-    hide = () => {
-        this.modalInstance.classList.add('hidden');
-
-        this.removeCssClass(this.modalDialogInstance, 'verticial-centered-fadein');
-        this.removeCssClass(this.modalDialogInstance, 'fadein');
+    Hide = () => {
+        this._modalDom.classList.add( 'hidden' );
+        this._modalDialogDom.classList.remove( 'verticial-centered-fadein' );
+        this._modalDialogDom.classList.remove( 'fadein' );
 
         // 移除監聽 tab 鍵
-        this.modalInstance.removeEventListener('keydown', this.enableTabOnlyInTabbableElements);
+        this._modalDom.removeEventListener( 'keydown', this._enableTabOnlyInTabbableElements );
     }
 
-    addCssClass = (instance, className) => {
-        if (instance.classList.contains(className) === false) {
-            instance.classList.add(className);
-        }
-    }
-    removeCssClass = (instance, className) => {
-        if (instance.classList.contains(className)) {
-            instance.classList.remove(className);
-        }
-    }
+    _findTabbableElements = ( targetElement ) => {
 
-    findTabbableElements = (targetElement) => {
-
-
-        function findChildrenTabbableElements(element) {
+        function findChildrenTabbableElements( element ) {
 
             const children = element.children;
-            if (children?.length >= 0 === false) {
+            if ( children?.length >= 0 === false ) {
                 return [];
             }
 
             const tabbableControls = [];
 
-            for (let child of children) {
+            for ( let child of children ) {
 
-                const tabIndex = child.getAttribute('tabindex');
-                if (tabIndex !== null || child.tabIndex >= 0) {
+                const tabIndex = child.getAttribute( 'tabindex' );
+                if ( tabIndex !== null || child.tabIndex >= 0 ) {
                     // console.log('with tabIndex Control', child);
-                    tabbableControls.push(child);
+                    tabbableControls.push( child );
                 }
 
-                const childTabbableControls = findChildrenTabbableElements(child);
-                tabbableControls.push(...childTabbableControls);
+                const childTabbableControls = findChildrenTabbableElements( child );
+                tabbableControls.push( ...childTabbableControls );
             }
 
             return tabbableControls;
         }
 
-        const result = findChildrenTabbableElements(targetElement);
+        const result = findChildrenTabbableElements( targetElement );
 
         return result;
     }
 
-    enableTabOnlyInTabbableElements = (event) => {
+    _enableTabOnlyInTabbableElements = ( event ) => {
         const keyCode = event.keyCode;
         const tabbableElements = this._tabbableElements;
         const firstTabbableElement = tabbableElements[0];
 
-        if (keyCode === 9) {
-            if (event.shiftKey) {
+        if ( keyCode === 9 ) {
+            if ( event.shiftKey ) {
                 // shift + tab
-                if (document.activeElement === firstTabbableElement) {
+                if ( document.activeElement === firstTabbableElement ) {
+
                     // 第一個 tabbable element
                     event.preventDefault();
                     tabbableElements[tabbableElements.length - 1]?.focus();
+
                 } else {
+
                     // 不是第一個 tabbable element
-                    const index = tabbableElements.indexOf(document.activeElement);
+                    const index = tabbableElements.indexOf( document.activeElement );
                     tabbableElements[index - 1]?.focus();
+                   
                 }
             } else {
                 // tab
-                if (document.activeElement === tabbableElements[tabbableElements.length - 1]) {
+                if ( document.activeElement === tabbableElements[tabbableElements.length - 1] ) {
+                    
                     // 最後一個 tabbable element
                     event.preventDefault();
                     firstTabbableElement?.focus();
+                    
                 } else {
+                    
                     // 不是最後一個 tabbable element
-                    const index = tabbableElements.indexOf(document.activeElement);
+                    const index = tabbableElements.indexOf( document.activeElement );
                     tabbableElements[index + 1]?.focus();
+                    
                 }
             }
 
@@ -259,4 +254,4 @@ window.customElements.define('wc-modal', class extends HTMLElement {
 
     }
 
-})
+} )

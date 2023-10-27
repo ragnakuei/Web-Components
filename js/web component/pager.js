@@ -1,49 +1,65 @@
-const books = Array.from(Array(123).keys()).map(i => {
-    return {
-        Id: i + 1,
-        Title: `Title ${i + 1}`,
-        Author: `Author ${i + 1}`,
-        Price: (i + 1) * 1000
-    };
-});
+let books = [];
+const [
+    tbody,
+    pager,
+    spager
+] = getDomsByIds( [
+                      "tbody",
+                      "pager",
+                      "s-pager"
+                  ] );
 
-function toPage(detail) {
-    const {pageNo, pageData} = detail;
+pager.addCustomEventListener( 'onChangePageNo', ( e, d ) => toPage( d ) );
+spager.addCustomEventListener( 'onChangePageNo', ( e, d ) => toPage( d ) );
 
-    if ((pageData?.length >= 0) === false) {
-        console.log('No data');
+const bookRowTemplate = extractTemplate( "bookRowTemplate" );
+
+async function getBooks() {
+    return new Promise( resolve => {
+        setTimeout( () => {
+            resolve( Array.from( Array( 123 ).keys() ).map( i => {
+                return {
+                    Id: i + 1,
+                    Title: `Title ${ i + 1 }`,
+                    Author: `Author ${ i + 1 }`,
+                    Price: ( i + 1 ) * 1000
+                };
+            } ) );
+        }, 100 );
+    } );
+}
+
+function toPage( detail ) {
+    const { pageNo } = detail;
+
+    const pagedData = books.getPagedData( pageNo, pager.PageSize );
+    if ( ( pagedData?.length >= 0 ) === false ) {
+        console.log( 'No data' );
         return;
     }
 
-    const tbody = document.getElementById("tbody");
     tbody.innerHTML = "";
-    pageData.forEach(book => {
-        const tr = document.createElement("tr");
+    pagedData.forEach( book => {
 
-        const idTd = document.createElement("td");
-        idTd.innerText = book.Id;
-        tr.appendChild(idTd);
+        const row = bookRowTemplate.cloneNode( true );
 
-        const titleTd = document.createElement("td");
-        titleTd.innerText = book.Title;
-        tr.appendChild(titleTd);
+        row.setInnerTexts( {
+                               '#Id': book.Id,
+                               '#Title': book.Title,
+                               '#Author': book.Author,
+                               '#Price': book.Price
+                           } );
 
-        const authorTd = document.createElement("td");
-        authorTd.innerText = book.Author;
-        tr.appendChild(authorTd);
-
-        const priceTd = document.createElement("td");
-        priceTd.innerText = book.Price;
-        tr.appendChild(priceTd);
-
-        tbody.appendChild(tr);
-    });
+        tbody.appendChild( row );
+    } );
 }
 
-const pager = document.getElementById("pager");
-pager.addEventListener('onChangePageNo', e => toPage(e.detail));
-pager.Data = books;
+window.onload = async () => {
+    books = await getBooks();
 
-const s_pager = document.getElementById("s-pager");
-s_pager.addEventListener('onPageNoChange', e => toPage(e.detail));
-s_pager.Data = books;
+    pager.TotalCount = books.length;
+    pager.ToPage( 1 );
+
+    spager.TotalCount = books.length;
+    spager.ToPage( 1 );
+}

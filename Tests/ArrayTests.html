@@ -1,0 +1,37 @@
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-123abc' ; ">
+    </head>
+    <body>
+
+        <div>
+            <h2>Array Tests</h2>
+        </div>
+
+        <script src="/js/UnitTester.js?20231026"></script>
+        <script src="/js/site.js?20231026"></script>
+        <script nonce="123abc">
+            const ary = Array.from( { length: 95 }, ( v, i ) => i )
+                             .map( i => ( {
+                                 id: i + 1,
+                                 name: `name${ i + 1 }`
+                             } ) );
+
+            UnitTester.Test( 'getPagedData', () => {
+                const pageSize = 10;
+                const pageNo = 2;
+                const result = ary.getPagedData( pageNo, pageSize );
+
+                // from 11 to 20
+                const expected = Array.from( { length: pageSize }, ( v, i ) => i ).map( i => ( {
+                    id: i + 11,
+                    name: `name${ i + 11 }`
+                } ) );
+
+                UnitTester.AssertArrayEqual( expected, result );
+            } );
+
+        </script>
+
+    </body>
+</html>

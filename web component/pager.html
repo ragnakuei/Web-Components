@@ -25,7 +25,14 @@
                     <th>Price</th>
                 </tr>
                 </thead>
-                <tbody id="tbody"></tbody>
+                <tbody id="tbody">
+                    <tr id="bookRowTemplate" class="hide">
+                        <td id="Id"></td>
+                        <td id="Title"></td>
+                        <td id="Author"></td>
+                        <td id="Price"></td>
+                    </tr>
+                </tbody>
             </table>
             <wc-pager id="pager" page-size="10"></wc-pager>
             <wc-s-pager id="s-pager" page-size="10"></wc-s-pager>
@@ -39,6 +46,7 @@
     </div>
 </div>
 
+<script src="/js/site.js?20230100602"></script>
 <script src="/js/web component/wc-pager.js?20230100602"></script>
 <script src="/js/web component/wc-s-pager.js?20230100602"></script>
 <script src="/js/web component/pager.js?20230100602"></script>
