@@ -9,11 +9,6 @@
     -->
 </head>
 <body>
-<style>
-    .hidden {
-        display: none;
-    }
-</style>
 <div class="container">
     <h2>Modal</h2>
     <div class="d-flex flex-wrap">
@@ -21,13 +16,14 @@
 
             <button type="button" class="btn btn-primary" id="btnOpenModal1">Open modal 1</button>
 
-            <wc-modal class="hidden" size="sm" id="modal1">
+            <wc-modal class="hide" size="sm" id="modal1">
                 <form>
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Email address</label>
                         <input type="email" class="form-control" id="exampleFormControlInput1"
                                placeholder="name@example.com">
                     </div>
+                    
                     <div class="mb-3">
                         <label for="exampleFormControlTextarea2" class="form-label">Example textarea</label>
                         <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
@@ -37,13 +33,14 @@
                 </form>
             </wc-modal>
 
-            <wc-modal class="hidden" size="md" vertical id="modal2">
+            <wc-modal class="hide" size="md" vertical id="modal2">
                 <form>
                     <div class="mb-3">
                         <label for="exampleFormControlInput3" class="form-label">Email address</label>
                         <input type="email" class="form-control" id="exampleFormControlInput3"
                                placeholder="name@example.com">
                     </div>
+                    
                     <div class="mb-3">
                         <label for="exampleFormControlTextarea4" class="form-label">Example textarea</label>
                         <textarea class="form-control" id="exampleFormControlTextarea4" rows="3"></textarea>

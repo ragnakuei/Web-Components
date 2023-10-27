@@ -29,8 +29,8 @@ async function getBooks() {
     } );
 }
 
-function toPage( detail ) {
-    const { pageNo } = detail;
+function toPage( eventDetail ) {
+    const { pageNo } = eventDetail;
 
     const pagedData = books.getPagedData( pageNo, pager.PageSize );
     if ( ( pagedData?.length >= 0 ) === false ) {

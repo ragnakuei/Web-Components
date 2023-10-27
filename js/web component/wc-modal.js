@@ -23,11 +23,11 @@ window.customElements.define( 'wc-modal', class extends HTMLElement {
         /* center */
         display: flex;
         justify-content: center;
-        align-items: center;
+        /*align-items: center;*/
         
         overflow: hidden auto;
     }
-        .modal.hidden {
+        .modal.hide {
             display: none;
             visibility:hidden;
         }
@@ -99,26 +99,26 @@ window.customElements.define( 'wc-modal', class extends HTMLElement {
     }
 </style>
 
- <div class="modal hidden" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <div class="dialog-inner">
-                <div class="modal-content">
-                    <slot></slot>
-                </div>
+<div class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="dialog-inner">
+            <div class="modal-content">
+                <slot></slot>
             </div>
         </div>
+    </div>
 </div>
     `;
         // 此 web component 預設不顯示;，在初始化前就不會有閃爍的問題 
         // 在 connectedCallback 時，就可以顯示了
-        this.classList.remove( 'hidden' );
+        this.classList.remove( 'hide' );
 
         this._modalDom = this.shadowRoot.querySelector( '.modal' );
         this._modalDialogDom = this.shadowRoot.querySelector( '.modal-dialog' );
 
-        if ( this.size ) {
-            this._modalDialogDom.classList.add( this.size );
-        }
+        // if ( this.size ) {
+        //     this._modalDialogDom.classList.add( this.size );
+        // }
 
         if ( this.vertical ) {
             this._modalDialogDom.classList.add( 'vertical-centered' );
@@ -138,10 +138,10 @@ window.customElements.define( 'wc-modal', class extends HTMLElement {
         return this.getAttribute( 'id' );
     }
 
-    get size() {
-        // available values: sm, md, lg, xl, (未指定) 全寬
-        return this.getAttribute( 'size' );
-    }
+    // get size() {
+    //     // available values: sm, md, lg, xl, (未指定) 全寬
+    //     return this.getAttribute( 'size' );
+    // }
 
     get vertical() {
         // 如果未給定 attribute 則回傳 null，反之回傳 ""
@@ -153,7 +153,7 @@ window.customElements.define( 'wc-modal', class extends HTMLElement {
         // console.log( 'show', this.id );
         // console.log( 'vertial', this.vertical );
 
-        this._modalDom.classList.remove( 'hidden' );
+        this._modalDom.classList.remove( 'hide' );
 
         if ( this.vertical ) {
             this._modalDialogDom.classList.add( 'verticial-centered-fadein' );
@@ -163,7 +163,7 @@ window.customElements.define( 'wc-modal', class extends HTMLElement {
 
         const slot = this.shadowRoot.querySelector( 'slot' );
         const slotNodes = slot.assignedNodes().filter( node => node.nodeType === Node.ELEMENT_NODE );
-        this._tabbableElements = this._findTabbableElements( slotNodes[0] );
+        this._tabbableElements = this._findTabbableElements( slotNodes );
 
         // focus 第一個 tabbable element
         this._tabbableElements[0]?.focus();
@@ -172,7 +172,7 @@ window.customElements.define( 'wc-modal', class extends HTMLElement {
         this._modalDom.addEventListener( 'keydown', this._enableTabOnlyInTabbableElements );
     }
     Hide = () => {
-        this._modalDom.classList.add( 'hidden' );
+        this._modalDom.classList.add( 'hide' );
         this._modalDialogDom.classList.remove( 'verticial-centered-fadein' );
         this._modalDialogDom.classList.remove( 'fadein' );
 
@@ -180,7 +180,8 @@ window.customElements.define( 'wc-modal', class extends HTMLElement {
         this._modalDom.removeEventListener( 'keydown', this._enableTabOnlyInTabbableElements );
     }
 
-    _findTabbableElements = ( targetElement ) => {
+    // 找出所有 tabbable elements
+    _findTabbableElements = ( targetElements ) => {
 
         function findChildrenTabbableElements( element ) {
 
@@ -206,11 +207,11 @@ window.customElements.define( 'wc-modal', class extends HTMLElement {
             return tabbableControls;
         }
 
-        const result = findChildrenTabbableElements( targetElement );
-
+        const result = targetElements.map( element => findChildrenTabbableElements( element ) ).flat();
         return result;
     }
 
+    // 監聽 tab 鍵，只能在 tabbable elements 中循環
     _enableTabOnlyInTabbableElements = ( event ) => {
         const keyCode = event.keyCode;
         const tabbableElements = this._tabbableElements;
@@ -230,22 +231,22 @@ window.customElements.define( 'wc-modal', class extends HTMLElement {
                     // 不是第一個 tabbable element
                     const index = tabbableElements.indexOf( document.activeElement );
                     tabbableElements[index - 1]?.focus();
-                   
+
                 }
             } else {
                 // tab
                 if ( document.activeElement === tabbableElements[tabbableElements.length - 1] ) {
-                    
+
                     // 最後一個 tabbable element
                     event.preventDefault();
                     firstTabbableElement?.focus();
-                    
+
                 } else {
-                    
+
                     // 不是最後一個 tabbable element
                     const index = tabbableElements.indexOf( document.activeElement );
                     tabbableElements[index + 1]?.focus();
-                    
+
                 }
             }
 
