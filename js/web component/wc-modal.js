@@ -9,6 +9,8 @@ window.customElements.define('wc-modal', class extends HTMLElement {
         this.shadowRoot.innerHTML = `
 <style>
     .modal {
+        /* modal 外框忽略滑鼠事件 */
+        pointer-events: none;
         background-color: rgba(0, 0, 0, 0.5);
         position: fixed;
         top: 0;
@@ -16,28 +18,40 @@ window.customElements.define('wc-modal', class extends HTMLElement {
         width: 100vw;
         height: 100vh;
         z-index: 1000;
+        
+        /* inner */
+        /* center */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        overflow: hidden auto;
     }
-
+        .modal.hidden {
+            display: none;
+            visibility:hidden;
+        }
+    
     .modal-dialog {
         position: relative;
-        width: auto;
         pointer-events: none;
+        
+        max-width: 100vw;
+        max-height: 100vh;
     }
-        .modal-dialog.modal-dialog-centered {
-            margin: 1.75rem auto;
-        }
-        .modal-dialog.sm {
-            width: 300px;
-        }
-        .modal-dialog.md {
-            width: 800px;
-        }
-        .modal-dialog.lg {
-            width: 1140px;
-        }
-        .modal-dialog.xl {
-            width: 1400px;
-        }
+    
+        /*.modal-dialog.sm {*/
+        /*    width: 300px;*/
+        /*}*/
+        /*.modal-dialog.md {*/
+        /*    width: 800px;*/
+        /*}*/
+        /*.modal-dialog.lg {*/
+        /*    width: 1140px;*/
+        /*}*/
+        /*.modal-dialog.xl {*/
+        /*    width: 1400px;*/
+        /*}*/
         .modal-dialog.vertical-centered {
             position: absolute;
             top: 50%; 
@@ -68,26 +82,36 @@ window.customElements.define('wc-modal', class extends HTMLElement {
             }
         }
 
+    .dialog-inner {
+        /* dialog 上方空間 */
+        margin-top: 20px;
+        /* dialog 下方空間 */
+        padding-bottom: 20px;
+    }
 
     .modal-content {
         background-color: white;
-        border-radius: 0.3rem;
+        border-radius: 8px;
         padding: 1rem; 
+        
+        /* 必要，讓滑鼠可以點到 slot 內的內容 */
         pointer-events: auto;
     }
 </style>
 
- <div class="modal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <slot></slot>
+ <div class="modal hidden" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="dialog-inner">
+                <div class="modal-content">
+                    <slot></slot>
+                </div>
+            </div>
         </div>
-    </div>
 </div>
     `;
         // 此 web component 預設不顯示 display: none;，在初始化前就不會有閃爍的問題 
         // 在 connectedCallback 時，就可以顯示了
-        this.style.display = 'block';
+        this.classList.remove('hidden');
         
         this.modalInstance = this.shadowRoot.querySelector('.modal');
         this.modalDialogInstance = this.shadowRoot.querySelector('.modal-dialog');
@@ -129,7 +153,7 @@ window.customElements.define('wc-modal', class extends HTMLElement {
         console.log('show', this.id);
         console.log('vertial', this.vertical);
 
-        this.modalInstance.style.display = 'block';
+        this.modalInstance.classList.remove('hidden');
 
         if (this.vertical) {
             this.addCssClass(this.modalDialogInstance, 'verticial-centered-fadein');
@@ -148,7 +172,7 @@ window.customElements.define('wc-modal', class extends HTMLElement {
         this.modalInstance.addEventListener('keydown', this.enableTabOnlyInTabbableElements);
     }
     hide = () => {
-        this.modalInstance.style.display = 'none';
+        this.modalInstance.classList.add('hidden');
 
         this.removeCssClass(this.modalDialogInstance, 'verticial-centered-fadein');
         this.removeCssClass(this.modalDialogInstance, 'fadein');

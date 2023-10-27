@@ -1,50 +1,49 @@
-  window.vue_wysiwyg = window.vue_wysiwyg || {
+  window.vueWysiwyg = window.vueWysiwyg || {
     template: `
-<div class="wysiwyg" 
-     v-on:mouseleave="apply">
+<div class="wysiwyg" >
     <div class="toolbar">
 
-        <button type="button" class="item undo" v-on:click="doc_execCommand('undo')" title="undo"></button>
-        <button type="button" class="item redo" v-on:click="doc_execCommand('redo')" title="redo"></button>
+        <button type="button" class="item undo" v-on:click="execCommand('undo')" title="undo"></button>
+        <button type="button" class="item redo" v-on:click="execCommand('redo')" title="redo"></button>
         <div class="item delimiter"></div>
 
-        <button type="button" class="item copy" v-on:click="doc_execCommand('copy')" title="copy"></button>
-        <button type="button" class="item cut" v-on:click="doc_execCommand('cut')" title="cut"></button>
-        <button type="button" class="item paste" v-on:click="doc_execCommand('paste')" title="paste"></button>
-        <button type="button" class="item delete" v-on:click="doc_execCommand('delete')" title="delete"></button>
-        <button type="button" class="item select-all" v-on:click="doc_execCommand('selectAll')" title="select all"></button>
+        <button type="button" class="item copy" v-on:click="execCommand('copy')" title="copy"></button>
+        <button type="button" class="item cut" v-on:click="execCommand('cut')" title="cut"></button>
+        <button type="button" class="item paste" v-on:click="execCommand('paste')" title="paste"></button>
+        <button type="button" class="item delete" v-on:click="execCommand('delete')" title="delete"></button>
+        <button type="button" class="item select-all" v-on:click="execCommand('selectAll')" title="select all"></button>
         <div class="item delimiter"></div>
 
-        <button type="button" class="item underline" v-on:click="doc_execCommand('underline')"></button>
-        <button type="button" class="item italic" v-on:click="doc_execCommand('italic')"></button>
-        <button type="button" class="item bold" v-on:click="doc_execCommand('bold')"></button>
-        <button type="button" class="item strikethrough" v-on:click="doc_execCommand('strikeThrough')"></button>
+        <button type="button" class="item underline" v-on:click="execCommand('underline')"></button>
+        <button type="button" class="item italic" v-on:click="execCommand('italic')"></button>
+        <button type="button" class="item bold" v-on:click="execCommand('bold')"></button>
+        <button type="button" class="item strikethrough" v-on:click="execCommand('strikeThrough')"></button>
         <div class="item delimiter"></div>
 
         <input type="color" v-on:blur="changeFontColor($event.target.value)" />
-        <button type="button" class="item link" v-on:click="insert_link()"></button>
+        <button type="button" class="item link" v-on:click="insertLink()"></button>
 
         <input type="file" 
                accept="image/*" 
                style="display: none;" 
-               id="insert_image" 
-               v-on:change="insert_image($event.target)"
-               ref="insert_image_dom"
+               id="insertImage" 
+               v-on:change="insertImage($event.target)"
+               ref="insertImageDom"
                >
-        <button type="button" class="item image-content" for="insert_image" title="Upload Image" v-on:click="click_insert_image_dom()"></button>
-        <button type="button" class="item image-link" v-on:click="insert_image_url()" title="Insert Image Url"></button>
+        <button type="button" class="item image-content" for="insertImage" title="Upload Image" v-on:click="clickInsertImageDom()"></button>
+        <button type="button" class="item image-link" v-on:click="insertImageUrl()" title="Insert Image Url"></button>
         <div class="item delimiter"></div>
 
         <!-- Jutify -->
-        <button type="button" class="item align-left" v-on:click="doc_execCommand('justifyLeft')"></button>
-        <button type="button" class="item align-center" v-on:click="doc_execCommand('justifyCenter')"></button>
-        <button type="button" class="item align-right" v-on:click="doc_execCommand('justifyRight')"></button>
+        <button type="button" class="item align-left" v-on:click="execCommand('justifyLeft')"></button>
+        <button type="button" class="item align-center" v-on:click="execCommand('justifyCenter')"></button>
+        <button type="button" class="item align-right" v-on:click="execCommand('justifyRight')"></button>
     </div>
     <hr />
     <div class="editor" 
-         ref="editor_dom"
+         ref="editorDom"
+         v-on:input="$emit('update:modelValue', $event.target.innerHTML)"
          contenteditable
-         v-html="modelValue"
     >
     </div>
 </div>
@@ -53,13 +52,16 @@
     modelValue: String,
   },
   setup(props, { emit }) {
-    const editor_dom = ref(null);
-
-    const doc_execCommand = function (command, showUI, value) {
+    const editorDom = ref(null);
+    
+    const getContent = () => editorDom.value.innerHTML;
+    const setContent = (content) => editorDom.value.innerHTML = content;
+    
+    const execCommand = function (command, showUI, value) {
       document.execCommand(command, showUI, value);
     };
 
-    const insert_link = function () {
+    const insertLink = function () {
       if(isSelectionOrFocusInEditor() === false) {
         alert('請先點擊編輯區域 !');
         return;
@@ -82,16 +84,16 @@
       
     }
 
-    const insert_image_dom = ref(null);
-    const click_insert_image_dom = function () {
+    const insertImageDom = ref(null);
+    const clickInsertImageDom = function () {
       if(isSelectionOrFocusInEditor() === false) {
         alert('請先點擊編輯區域 !');
         return;
       }
 
-      insert_image_dom.value.click();
+      insertImageDom.value.click();
     };
-    const insert_image = function (target) {
+    const insertImage = function (target) {
       
       if(isSelectionOrFocusInEditor() === false) {
         alert('請先點擊編輯區域 !');
@@ -115,7 +117,7 @@
           insertImageToRange(img);
 
           // 清空 input file
-          insert_image_dom.value.value = null;
+          insertImageDom.value.value = null;
         },
         false
       );
@@ -125,7 +127,7 @@
       }
     };
 
-    const insert_image_url = function () {
+    const insertImageUrl = function () {
 
       if(isSelectionOrFocusInEditor() === false) {
         alert('請先點擊編輯區域 !');
@@ -161,7 +163,7 @@
         // no selection
 
         // insert img tag to editor
-        editor_dom.value.appendChild(img);
+        editorDom.value.appendChild(img);
       }
     }
 
@@ -175,13 +177,9 @@
       }
 
       if (color) {
-        doc_execCommand("foreColor", false, color);
+        execCommand("foreColor", false, color);
         selection.removeAllRanges();
       }
-    };
-    
-    const apply = function () {
-      emit("update:modelValue", editor_dom.value.innerHTML);
     };
     
     function isSelectionOrFocusInEditor() {
@@ -194,7 +192,7 @@
 
         let selectionDom = selection.getRangeAt(0).commonAncestorContainer;
         while(selectionDom) {
-          if(selectionDom === editor_dom.value) {
+          if(selectionDom === editorDom.value) {
             return true;
           }
           
@@ -209,15 +207,16 @@
     });
 
     return {
-      editor_dom,
-      doc_execCommand,
-      insert_link,
-      insert_image,
-      insert_image_dom,
-      click_insert_image_dom,
-      insert_image_url,
+      editorDom,
+      getContent,
+      setContent,
+      execCommand,
+      insertLink,
+      insertImage,
+      insertImageDom,
+      clickInsertImageDom,
+      insertImageUrl,
       changeFontColor,
-      apply,
     };
   },
 };

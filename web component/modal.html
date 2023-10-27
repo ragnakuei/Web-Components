@@ -9,7 +9,11 @@
     -->
 </head>
 <body>
-
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
 <div class="container">
     <h2>Modal</h2>
     <div class="d-flex flex-wrap">
@@ -17,7 +21,7 @@
 
             <button type="button" class="btn btn-primary" id="btnOpenModal1">Open modal 1</button>
 
-                <wc-modal size="sm" id="modal1" style="display: none;">
+            <wc-modal class="hidden" size="sm" id="modal1">
                 <form>
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Email address</label>
@@ -33,7 +37,7 @@
                 </form>
             </wc-modal>
 
-                <wc-modal size="md" vertical id="modal2" style="display: none;">
+            <wc-modal class="hidden" size="md" vertical id="modal2">
                 <form>
                     <div class="mb-3">
                         <label for="exampleFormControlInput3" class="form-label">Email address</label>

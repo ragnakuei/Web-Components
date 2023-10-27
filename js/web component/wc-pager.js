@@ -107,7 +107,7 @@ customElements.define("wc-pager", class extends HTMLElement {
         this.Render();
 
         const pageData = this.GetPageDtos();
-        this.dispatchEvent(new CustomEvent('onPageNoChange', {
+        this.dispatchEvent(new CustomEvent('onChangePageNo', {
             detail: {
                 pageNo: pageNo,
                 pageData: pageData,
