@@ -89,7 +89,7 @@ customElements.define( "wc-pager", class extends HTMLElement {
         // 如果不給定 pageNo，則使用目前的 pageNo，可以當作目前頁面 reload
         this._pageNo = pageNo || this._pageNo;
 
-        this.dispatchCustomEvent( 'onChangePageNo', { pageNo: pageNo, } );
+        this.dispatchCustomEvent( 'onChangePageNo', { pageNo: this._pageNo, } );
 
         this._render();
     }

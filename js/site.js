@@ -25,12 +25,18 @@ function extractTemplate( id ) {
     return template?.cloneNode( true );
 }
 
-HTMLElement.prototype.dispatchCustomEvent = ( eventName, detail ) => {
+// 注意：以 prototype 擴充時，不要用 arrow function，否則 this 會指向 window
+
+HTMLElement.prototype.querySelectors = function ( selectors ) {
+    const doms = selectors.map( selector => this.querySelector( selector ) );
+    return doms;
+}
+HTMLElement.prototype.dispatchCustomEvent = function ( eventName, detail ) {
     this.dispatchEvent( new CustomEvent( eventName, {
         detail: detail
     } ) );
 }
-HTMLElement.prototype.addCustomEventListener = ( eventName, callback ) => {
+HTMLElement.prototype.addCustomEventListener = function ( eventName, callback ) {
     this.addEventListener( eventName, ( e ) => callback( e.detail, e ) );
 }
 
@@ -41,6 +47,39 @@ Array.prototype.getPagedData = function ( pageNo, pageSize ) {
     const pagedData = this.slice( startIndex, endIndex );
 
     return pagedData;
+}
+Array.prototype.globalSort = function ( column, order ) {
+    if ( this.length > 0 === false ) {
+        return;
+    }
+
+    // 如果是數字
+    if ( typeof this[0][column] === 'number' ) {
+        this.globalNumberSort( column, order );
+    }
+
+    // 如果是字串
+    if ( typeof this[0][column] === 'string' ) {
+        this.globalStringSort( column, order );
+    }
+}
+Array.prototype.globalNumberSort = function ( column, order ) {
+    this.sort( ( a, b ) => {
+        if ( order === 'asc' ) {
+            return a[column] - b[column];
+        } else {
+            return b[column] - a[column];
+        }
+    } );
+}
+Array.prototype.globalStringSort = function ( column, order ) {
+    this.sort( ( a, b ) => {
+        if ( order === 'asc' ) {
+            return a[column].localeCompare( b[column] );
+        } else {
+            return b[column].localeCompare( a[column] );
+        }
+    } );
 }
 
 Node.prototype.setInnerText = function ( selector, text ) {
