@@ -7,7 +7,7 @@ window.customElements.define( 'wc-modal', class extends HTMLElement {
 
     connectedCallback() {
         this.shadowRoot.innerHTML = `
-<style>
+<style nonce="123abc">
     .modal {
         /* modal 外框忽略滑鼠事件 */
         pointer-events: none;

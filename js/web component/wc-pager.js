@@ -31,6 +31,12 @@ customElements.define( "wc-pager", class extends HTMLElement {
     _render = () => {
         if ( this._pageCount === 0 ) return;
 
+        // 如果目前頁碼大於總頁數，則將目前頁碼設定為總頁數
+        if(this._pageNo > this._pageCount) {
+            this._pageNo = this._pageCount;
+            this.ToPage();
+        }
+
         this.innerHTML = `
 <nav aria-label="Page navigation example">
     <ul class="pagination">

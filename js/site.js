@@ -25,20 +25,30 @@ function extractTemplate( id ) {
     return template?.cloneNode( true );
 }
 
-// 注意：以 prototype 擴充時，不要用 arrow function，否則 this 會指向 window
+function setValueToDoms( target, obj, assigners ) {
+    for ( let key in assigners ) {
 
-HTMLElement.prototype.querySelectors = function ( selectors ) {
-    const doms = selectors.map( selector => this.querySelector( selector ) );
-    return doms;
+        const dom = target.querySelector( '#' + key );
+        if ( !dom ) {
+            console.error( `Can't find dom by selector: ${ key }` );
+            continue;
+        }
+
+        const value = obj[key];
+        const assigner = assigners[key];
+        if ( assigner ) {
+            assigner( dom, value );
+            continue;
+        }
+
+        if ( dom ) {
+            dom.value = value || '';
+        }
+
+    }
 }
-HTMLElement.prototype.dispatchCustomEvent = function ( eventName, detail ) {
-    this.dispatchEvent( new CustomEvent( eventName, {
-        detail: detail
-    } ) );
-}
-HTMLElement.prototype.addCustomEventListener = function ( eventName, callback ) {
-    this.addEventListener( eventName, ( e ) => callback( e.detail, e ) );
-}
+
+// 注意：以 prototype 擴充時，不要用 arrow function，否則 this 會指向 window
 
 Array.prototype.getPagedData = function ( pageNo, pageSize ) {
     const startIndex = ( pageNo - 1 ) * pageSize;
@@ -49,19 +59,21 @@ Array.prototype.getPagedData = function ( pageNo, pageSize ) {
     return pagedData;
 }
 Array.prototype.globalSort = function ( column, order ) {
-    if ( this.length > 0 === false ) {
+    if ( this.length > 0 === false
+        || !column
+        || !order ) {
         return;
     }
 
-    // 如果是數字
-    if ( typeof this[0][column] === 'number' ) {
+    // 如果是數字 / boolean / Date
+    if ( [ 'number', 'boolean' ].includes( typeof this[0][column] )
+        || this[0][column] instanceof Date ) {
         this.globalNumberSort( column, order );
+        return;
     }
 
-    // 如果是字串
-    if ( typeof this[0][column] === 'string' ) {
-        this.globalStringSort( column, order );
-    }
+    // 其他
+    this.globalStringSort( column, order );
 }
 Array.prototype.globalNumberSort = function ( column, order ) {
     this.sort( ( a, b ) => {
@@ -96,4 +108,17 @@ Node.prototype.setInnerTexts = function ( selectorTextPairs ) {
         const text = selectorTextPairs[selector];
         this.setInnerText( selector, text );
     }
+}
+
+HTMLElement.prototype.querySelectors = function ( selectors ) {
+    const doms = selectors.map( selector => this.querySelector( selector ) );
+    return doms;
+}
+HTMLElement.prototype.dispatchCustomEvent = function ( eventName, detail ) {
+    this.dispatchEvent( new CustomEvent( eventName, {
+        detail: detail
+    } ) );
+}
+HTMLElement.prototype.addCustomEventListener = function ( eventName, callback ) {
+    this.addEventListener( eventName, ( e ) => callback( e.detail, e ) );
 }

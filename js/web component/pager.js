@@ -2,15 +2,34 @@ let books = [];
 const [
     tbodyDom,
     pagerDom,
-    spagerDom
+    spagerDom,
+    btnAddBookDom,
+    editBookDom,
 ] = getDomsByIds( [
                       "tbody",
                       "pager",
-                      "s-pager"
+                      "s-pager",
+                      "btnAddBook",
+                      "editBook",
                   ] );
 
 pagerDom.addCustomEventListener( 'onChangePageNo', d => toPage( d ) );
 spagerDom.addCustomEventListener( 'onChangePageNo', d => toPage( d ) );
+editBookDom.addCustomEventListener( 'onSaveBook', book => {
+    const index = books.findIndex( b => b.Id === book.Id );
+    if ( index >= 0 ) {
+        books[index] = book;
+    } else {
+        book.Id = books.length + 1;
+        books.push( book );
+    }
+    
+    pagerDom.TotalCount = books.length;
+    reloadPage();
+} );
+btnAddBookDom.addEventListener( 'click', () => {
+    editBookDom.Show( {} );
+} );
 
 const bookRowTemplate = extractTemplate( "bookRowTemplate" );
 
@@ -55,8 +74,26 @@ function toPage( eventDetail ) {
                                '#Price': book.Price
                            } );
 
+        row.querySelector( '#btnEditBook' ).addEventListener( 'click', () => {
+            editBookDom.Show( book );
+        } );
+        
+        row.querySelector( '#btnDeleteBook' ).addEventListener( 'click', () => {
+            const index = books.findIndex( b => b.Id === book.Id );
+            if ( index >= 0 ) {
+                books.splice( index, 1 );
+            }
+
+            pagerDom.TotalCount = books.length;
+            reloadPage();
+        } );
+
         tbodyDom.appendChild( row );
     } );
+}
+
+function reloadPage() {
+    pagerDom.ToPage();
 }
 
 const sortColumns = new SortColumns( [
@@ -71,7 +108,7 @@ sortColumns.SortChange = ( column, order ) => {
 
     books.globalSort( column.id, order );
 
-    pagerDom.ToPage();
+    reloadPage();
 };
 
 window.onload = async () => {
@@ -83,3 +120,105 @@ window.onload = async () => {
     spagerDom.TotalCount = books.length;
     spagerDom.ToPage( 1 );
 }
+
+customElements.define( 'edit-book', class extends HTMLElement {
+
+    constructor() {
+        super();
+
+        this.innerHTML = `
+<wc-modal id="modal" class="hide">
+    <div class="modal-dialog vertical-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">編輯書籍</h5>
+            </div>    
+            <form>
+                <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="id" class="form-label">編號</label>
+                            <input type="text" class="form-control" id="Id" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">標題</label>
+                            <input type="text" class="form-control" id="Title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="author" class="form-label">作者</label>
+                            <input type="text" class="form-control" id="Author">
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">售價</label>
+                            <input type="number" class="form-control" id="Price">
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-primary" >儲存</button>
+                    <button type="button" class="btn btn-outline-secondary" id="btnCancel">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</wc-modal>       
+`;
+        [
+            this._modalDom,
+            this._btnCancelDom,
+            this._formDom,
+            this._IdDom,
+            this._TitleDom,
+            this._AuthorDom,
+            this._PriceDom,
+        ] = this.querySelectors( [
+                                     '#modal',
+                                     '#btnCancel',
+                                     'form',
+                                     '#Id',
+                                     '#Title',
+                                     '#Author',
+                                     '#Price',
+                                 ] );
+
+        this._btnCancelDom.addEventListener( 'click', () => {
+            this._modalDom.Hide();
+        } );
+
+        this._formDom.addEventListener( 'submit', ( e ) => {
+            e.preventDefault();
+
+            const book = {
+                Id: Number( this._IdDom.value ),
+                Title: this._TitleDom.value,
+                Author: this._AuthorDom.value,
+                Price: this._PriceDom.value,
+            };
+
+            this.dispatchCustomEvent( 'onSaveBook', { ...book } );
+
+            this._modalDom.Hide();
+        } );
+
+    }
+
+    // fields
+    _editBook = null;
+    _modalDom = null;
+    _btnCancelDom = null;
+    _formDom = null;
+    _IdDom = null;
+    _TitleDom = null;
+    _AuthorDom = null;
+    _PriceDom = null;
+
+    Show = ( book ) => {
+        this._editBook = book;
+
+        this._modalDom.Show();
+
+        this._IdDom.value = this._editBook.Id || '';
+        this._TitleDom.value = this._editBook.Title || '';
+        this._AuthorDom.value = this._editBook.Author || '';
+        this._PriceDom.value = this._editBook.Price || '';
+    };
+
+} );

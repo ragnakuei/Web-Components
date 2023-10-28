@@ -7,7 +7,7 @@
               crossorigin="anonymous"/>
         <link href="/css/site.css?2022122701" rel="stylesheet"/>
         <meta http-equiv="Content-Security-Policy"
-              content="default-src 'self'; script-src 'self'; style-src 'self' ; ">
+              content="default-src 'self'; script-src 'self' 'nonce-123abc' ; style-src 'self' 'nonce-123abc' ; ">
         <!-- 
             如果不要給定 CSP style-src 的話，那就無法設定 Web Component 中的 Style，相對也無法使用 Shadow DOM + SLOT 了 !  
         -->
@@ -34,6 +34,9 @@
                             <th>
                                 <wc-column-sort id="Price"></wc-column-sort>
                             </th>
+                            <th>
+                                <button type="button" class="btn btn-primary" id="btnAddBook">Add Book</button>
+                            </th>
                         </tr>
                         </thead>
                         <tbody id="tbody">
@@ -42,12 +45,16 @@
                             <td id="Title"></td>
                             <td id="Author"></td>
                             <td id="Price"></td>
+                            <td>
+                                <button type="button" class="btn btn-primary" id="btnEditBook">Edit</button>
+                                <button type="button" class="btn btn-danger" id="btnDeleteBook">Delete</button>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
                     <wc-pager id="pager" page-size="10"></wc-pager>
                     <wc-s-pager id="s-pager" page-size="10"></wc-s-pager>
-
+                    <edit-book id="editBook"></edit-book>
 
                 </div>
             </div>
@@ -60,6 +67,7 @@
         <script src="/js/site.js?20230100602"></script>
         <script src="/js/web component/wc-column-sort.js?20230100602"></script>
         <script src="/js/web component/wc-pager.js?20230100602"></script>
+        <script src="/js/web component/wc-modal.js?20230100602"></script>
         <script src="/js/web component/wc-s-pager.js?20230100602"></script>
         <script src="/js/web component/pager.js?20230100602"></script>
 
