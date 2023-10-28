@@ -195,7 +195,10 @@ window.customElements.define( 'wc-modal', class extends HTMLElement {
             for ( let child of children ) {
 
                 const tabIndex = child.getAttribute( 'tabindex' );
-                if ( tabIndex !== null || child.tabIndex >= 0 ) {
+                if (
+                    ( tabIndex !== null || child.tabIndex >= 0 )
+                    && child.disabled !== true
+                ) {
                     // console.log('with tabIndex Control', child);
                     tabbableControls.push( child );
                 }
