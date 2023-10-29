@@ -29,12 +29,8 @@ customElements.define( "wc-pager", class extends HTMLElement {
     // functions
 
     _render = () => {
-        if ( this._pageCount === 0 ) return;
-
-        // 如果目前頁碼大於總頁數，則將目前頁碼設定為總頁數
-        if(this._pageNo > this._pageCount) {
-            this._pageNo = this._pageCount;
-            this.ToPage();
+        if ( this._pageCount === 0 ) {
+            return;
         }
 
         this.innerHTML = `
@@ -95,6 +91,11 @@ customElements.define( "wc-pager", class extends HTMLElement {
         // 如果不給定 pageNo，則使用目前的 pageNo，可以當作目前頁面 reload
         this._pageNo = pageNo || this._pageNo;
 
+        // 如果目前頁碼大於總頁數，則將目前頁碼設定為總頁數
+        if(this._pageNo > this._pageCount) {
+            this._pageNo = this._pageCount;
+        }
+        
         this.dispatchCustomEvent( 'onChangePageNo', { pageNo: this._pageNo, } );
 
         this._render();

@@ -16,47 +16,45 @@
 
         <div class="container">
             <h2>Pager</h2>
-            <div class="d-flex flex-wrap">
-                <div>
+            <div>
 
-                    <table class="table" aria-label="">
-                        <thead>
-                        <tr>
-                            <th>
-                                <wc-column-sort id="Id"></wc-column-sort>
-                            </th>
-                            <th>
-                                <wc-column-sort id="Title"></wc-column-sort>
-                            </th>
-                            <th>
-                                <wc-column-sort id="Author"></wc-column-sort>
-                            </th>
-                            <th>
-                                <wc-column-sort id="Price"></wc-column-sort>
-                            </th>
-                            <th>
-                                <button type="button" class="btn btn-primary" id="btnAddBook">Add Book</button>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody id="tbody">
-                        <tr id="bookRowTemplate" class="hide">
-                            <td id="Id"></td>
-                            <td id="Title"></td>
-                            <td id="Author"></td>
-                            <td id="Price"></td>
-                            <td>
-                                <button type="button" class="btn btn-primary" id="btnEditBook">Edit</button>
-                                <button type="button" class="btn btn-danger" id="btnDeleteBook">Delete</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <wc-pager id="pager" page-size="10"></wc-pager>
-                    <wc-s-pager id="s-pager" page-size="10"></wc-s-pager>
-                    <edit-book id="editBook"></edit-book>
+                <table class="table" aria-label="">
+                    <thead>
+                    <tr>
+                        <th>
+                            <wc-column-sort id="Id"></wc-column-sort>
+                        </th>
+                        <th>
+                            <wc-column-sort id="Title"></wc-column-sort>
+                        </th>
+                        <th>
+                            <wc-column-sort id="Author"></wc-column-sort>
+                        </th>
+                        <th>
+                            <wc-column-sort id="Price"></wc-column-sort>
+                        </th>
+                        <th>
+                            <button type="button" class="btn btn-primary" id="btnAddBook">Add Book</button>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    <tr id="bookRowTemplate" class="hide">
+                        <td id="Id"></td>
+                        <td id="Title"></td>
+                        <td id="Author"></td>
+                        <td id="Price"></td>
+                        <td>
+                            <button type="button" class="btn btn-primary" id="btnEditBook">Edit</button>
+                            <button type="button" class="btn btn-danger" id="btnDeleteBook">Delete</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <wc-pager id="pager" page-size="10"></wc-pager>
+                <wc-s-pager id="s-pager" page-size="10"></wc-s-pager>
+                <edit-book id="editBook"></edit-book>
 
-                </div>
             </div>
 
             <div>
