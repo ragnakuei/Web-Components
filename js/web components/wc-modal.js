@@ -15,7 +15,6 @@ window.customElements.define( 'wc-modal', class extends HTMLElement {
     }
     
     dialog {
-        margin: auto;
         border: none;
         border-radius: 7px;
         max-height: calc(100vh - 30px);
@@ -34,7 +33,7 @@ window.customElements.define( 'wc-modal', class extends HTMLElement {
         padding: 10px;
         
         /* -20px <= padding -10px * 2 */
-        max-height: calc(100% - 20px);
+        max-height: calc(100vh - 50px);
         overflow: auto;
     }
     
