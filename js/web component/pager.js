@@ -127,38 +127,34 @@ customElements.define( 'edit-book', class extends HTMLElement {
         super();
 
         this.innerHTML = `
-<wc-modal id="modal" class="hide">
-    <div class="modal-dialog vertical-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">編輯書籍</h5>
-            </div>    
-            <form>
-                <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="id" class="form-label">編號</label>
-                            <input type="text" class="form-control" id="Id" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label for="title" class="form-label">標題</label>
-                            <input type="text" class="form-control" id="Title">
-                        </div>
-                        <div class="mb-3">
-                            <label for="author" class="form-label">作者</label>
-                            <input type="text" class="form-control" id="Author">
-                        </div>
-                        <div class="mb-3">
-                            <label for="price" class="form-label">售價</label>
-                            <input type="number" class="form-control" id="Price">
-                        </div>
+<wc-modal id="modal">
+    <div class="modal-header">
+        <h5 class="modal-title">編輯書籍</h5>
+    </div>    
+    <form>
+        <div class="modal-body">
+                <div class="mb-3">
+                    <label for="id" class="form-label">編號</label>
+                    <input type="text" class="form-control" id="Id" disabled>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-primary" >儲存</button>
-                    <button type="button" class="btn btn-outline-secondary" id="btnCancel">取消</button>
+                <div class="mb-3">
+                    <label for="title" class="form-label">標題</label>
+                    <input type="text" class="form-control" id="Title">
                 </div>
-            </form>
+                <div class="mb-3">
+                    <label for="author" class="form-label">作者</label>
+                    <input type="text" class="form-control" id="Author">
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">售價</label>
+                    <input type="number" class="form-control" id="Price">
+                </div>
         </div>
-    </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-outline-primary" >儲存</button>
+            <button type="button" class="btn btn-outline-secondary" id="btnCancel">取消</button>
+        </div>
+    </form>
 </wc-modal>       
 `;
         [
