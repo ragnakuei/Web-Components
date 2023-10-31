@@ -12,9 +12,18 @@ customElements.define( "wc-pager", class extends HTMLElement {
     }
 
     connectedCallback() {
+        this.innerHTML = `
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+    </ul>
+</nav>
+                `;
+        
+        this._ulDom = this.querySelector( "ul" );
     }
 
     // fields
+    _ulDom = null;
     _pageOffSet = null;
     _pageNo = null;
 
@@ -32,37 +41,30 @@ customElements.define( "wc-pager", class extends HTMLElement {
         if ( this._pageCount === 0 ) {
             return;
         }
-
-        this.innerHTML = `
-<nav aria-label="Page navigation example">
-    <ul class="pagination">
-    </ul>
-</nav>
-                `;
-
-        const ul = this.querySelector( "ul" );
+        
+        this._ulDom.innerHTML = "";
 
         if ( this._pageNo > 1 ) {
             const firstPageSpan = this._createPageItem( '<<', 1, false );
-            ul.appendChild( firstPageSpan );
+            this._ulDom.appendChild( firstPageSpan );
 
             const prevPageSpan = this._createPageItem( '<', Math.max( 1, this._pageNo - 1 ), false );
-            ul.appendChild( prevPageSpan );
+            this._ulDom.appendChild( prevPageSpan );
         }
 
         const firstPageNo = Math.max( 1, this._pageNo - this._pageOffSet );
         const lastPageNo = Math.min( this._pageNo + this._pageOffSet, this._pageCount );
         for ( let i = firstPageNo; i <= lastPageNo; i++ ) {
             const pageSpan = this._createPageItem( i, i );
-            ul.appendChild( pageSpan );
+            this._ulDom.appendChild( pageSpan );
         }
 
         if ( this._pageNo < this._pageCount ) {
             const nextPageSpan = this._createPageItem( '>', Math.min( this._pageCount, this._pageNo + 1 ), false );
-            ul.appendChild( nextPageSpan );
+            this._ulDom.appendChild( nextPageSpan );
 
             const lastPageSpan = this._createPageItem( '>>', this._pageCount, false );
-            ul.appendChild( lastPageSpan );
+            this._ulDom.appendChild( lastPageSpan );
         }
     }
 
@@ -76,7 +78,7 @@ customElements.define( "wc-pager", class extends HTMLElement {
 
         const pageLink = document.createElement( "a" );
         pageLink.className = "page-link";
-        pageLink.href = "#";
+        pageLink.href = "javascript:void(0);";
         pageLink.innerText = text;
         pageLink.onclick = () => {
             this.ToPage( pageNo );

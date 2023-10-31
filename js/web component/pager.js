@@ -77,7 +77,7 @@ function toPage( eventDetail ) {
         row.querySelector( '#btnEditBook' ).addEventListener( 'click', () => {
             editBookDom.Show( book );
         } );
-        
+
         row.querySelector( '#btnDeleteBook' ).addEventListener( 'click', () => {
             const index = books.findIndex( b => b.Id === book.Id );
             if ( index >= 0 ) {
