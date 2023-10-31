@@ -74,9 +74,9 @@ window.customElements.define( 'wc-button', class extends HTMLElement {
         return this.getAttribute( 'text' );
     }
 
-    asyncClick = async () => {
+    AsyncClick = async () => {
         await new Promise( resolve => setTimeout( resolve, 100 ) );
-        console.log( 'asyncClick' );
+        console.log( 'AsyncClick' );
     };
 
     // functions
@@ -85,7 +85,7 @@ window.customElements.define( 'wc-button', class extends HTMLElement {
         this._spinnerDom.classList.remove( 'hide' );
         this._wcBtnDom.setAttribute( 'disabled', 'disabled' );
 
-        await this.asyncClick();
+        await this.AsyncClick();
 
         console.log( 'finished handler' );
         this._spinnerDom.classList.add( 'hide' );

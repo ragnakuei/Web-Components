@@ -5,108 +5,108 @@ const [
     spagerDom,
     btnAddBookDom,
     editBookDom,
-] = getDomsByIds( [
-                      "tbody",
-                      "pager",
-                      "s-pager",
-                      "btnAddBook",
-                      "editBook",
-                  ] );
+] = getDomsByIds([
+    "tbody",
+    "pager",
+    "s-pager",
+    "btnAddBook",
+    "editBook",
+]);
 
-pagerDom.addCustomEventListener( 'onChangePageNo', d => toPage( d ) );
-spagerDom.addCustomEventListener( 'onChangePageNo', d => toPage( d ) );
-editBookDom.addCustomEventListener( 'onSaveBook', book => {
-    const index = books.findIndex( b => b.Id === book.Id );
-    if ( index >= 0 ) {
+pagerDom.addCustomEventListener('onChangePageNo', d => toPage(d));
+spagerDom.addCustomEventListener('onChangePageNo', d => toPage(d));
+editBookDom.addCustomEventListener('onSaveBook', book => {
+    const index = books.findIndex(b => b.Id === book.Id);
+    if (index >= 0) {
         books[index] = book;
     } else {
         book.Id = books.length + 1;
-        books.push( book );
+        books.push(book);
     }
-    
+
     pagerDom.TotalCount = books.length;
     reloadPage();
-} );
-btnAddBookDom.addEventListener( 'click', () => {
-    editBookDom.Show( {} );
-} );
+});
+btnAddBookDom.addEventListener('click', () => {
+    editBookDom.Show({});
+});
 
-const bookRowTemplate = extractTemplate( "bookRowTemplate" );
+const bookRowTemplate = extractTemplate("bookRowTemplate");
 
 async function getBooks() {
-    const result = await new Promise( resolve => {
-        setTimeout( () => {
-            resolve( Array.from( Array( 123 ).keys() ).map( i => {
+    const result = await new Promise(resolve => {
+        setTimeout(() => {
+            resolve(Array.from(Array(123).keys()).map(i => {
                 const no = i + 1;
                 return {
                     Id: no,
-                    Title: `Title ${ no }`,
-                    Author: `Author ${ no }`,
-                    Price: ( no ) * 1000
+                    Title: `Title ${no}`,
+                    Author: `Author ${no}`,
+                    Price: (no) * 1000
                 };
-            } ) );
-        }, 100 );
-    } );
+            }));
+        }, 100);
+    });
 
-    result.globalSort( sortColumns.Current.id, sortColumns.Current.Order );
+    result.globalSort(sortColumns.Current.id, sortColumns.Current.Order);
 
     return result;
 }
 
-function toPage( eventDetail ) {
-    const { pageNo } = eventDetail;
+function toPage(eventDetail) {
+    const {pageNo} = eventDetail;
 
-    const pagedData = books.getPagedData( pageNo, pagerDom.PageSize );
-    if ( ( pagedData?.length >= 0 ) === false ) {
-        console.log( 'No data' );
+    const pagedData = books.getPagedData(pageNo, pagerDom.PageSize);
+    if ((pagedData?.length >= 0) === false) {
+        console.log('No data');
         return;
     }
 
     tbodyDom.innerHTML = "";
-    pagedData.forEach( book => {
+    pagedData.forEach(book => {
 
-        const row = bookRowTemplate.cloneNode( true );
+        const row = bookRowTemplate.cloneNode(true);
 
-        row.setInnerTexts( {
-                               '#Id': book.Id,
-                               '#Title': book.Title,
-                               '#Author': book.Author,
-                               '#Price': book.Price
-                           } );
+        row.setInnerTexts({
+            '#Id': book.Id,
+            '#Title': book.Title,
+            '#Author': book.Author,
+            '#Price': book.Price
+        });
 
-        row.querySelector( '#btnEditBook' ).addEventListener( 'click', () => {
-            editBookDom.Show( book );
-        } );
+        row.querySelector('#btnEditBook').addEventListener('click', () => {
+            editBookDom.Show(book);
+        });
 
-        row.querySelector( '#btnDeleteBook' ).addEventListener( 'click', () => {
-            const index = books.findIndex( b => b.Id === book.Id );
-            if ( index >= 0 ) {
-                books.splice( index, 1 );
+        row.querySelector('#btnDeleteBook').addEventListener('click', () => {
+            const index = books.findIndex(b => b.Id === book.Id);
+            if (index >= 0) {
+                books.splice(index, 1);
             }
 
             pagerDom.TotalCount = books.length;
             reloadPage();
-        } );
+        });
 
-        tbodyDom.appendChild( row );
-    } );
+        tbodyDom.appendChild(row);
+    });
 }
 
 function reloadPage() {
     pagerDom.ToPage();
 }
 
-const sortColumns = new SortColumns( [
-                                         { text: '編號', id: 'Id', },
-                                         { text: '標題', id: 'Title', },
-                                         { text: '作者', id: 'Author', },
-                                         { text: '售價', id: 'Price', },
-                                     ] );
-sortColumns.SortChange = ( column, order ) => {
+const sortColumns = new SortColumns([
+    {text: '編號', id: 'Id',},
+    {text: '標題', id: 'Title',},
+    {text: '作者', id: 'Author',},
+    {text: '售價', id: 'Price',},
+]);
+sortColumns.SortChange = (column, order) => {
     // console.log('column', column);
     // console.log('order', order);
 
-    books.globalSort( column.id, order );
+    books.globalSort(column.id, order);
 
     reloadPage();
 };
@@ -115,13 +115,13 @@ window.onload = async () => {
     books = await getBooks();
 
     pagerDom.TotalCount = books.length;
-    pagerDom.ToPage( 1 );
+    pagerDom.ToPage(1);
 
     spagerDom.TotalCount = books.length;
-    spagerDom.ToPage( 1 );
+    spagerDom.ToPage(1);
 }
 
-customElements.define( 'edit-book', class extends HTMLElement {
+customElements.define('edit-book', class extends HTMLElement {
 
     constructor() {
         super();
@@ -151,7 +151,7 @@ customElements.define( 'edit-book', class extends HTMLElement {
                 </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-outline-primary" >儲存</button>
+            <wc-async-button type="submit" id="btnSubmit" class="btn btn-outline-primary" >儲存</wc-async-button>
             <button type="button" class="btn btn-outline-secondary" id="btnCancel">取消</button>
         </div>
     </form>
@@ -165,34 +165,47 @@ customElements.define( 'edit-book', class extends HTMLElement {
             this._TitleDom,
             this._AuthorDom,
             this._PriceDom,
-        ] = this.querySelectors( [
-                                     '#modal',
-                                     '#btnCancel',
-                                     'form',
-                                     '#Id',
-                                     '#Title',
-                                     '#Author',
-                                     '#Price',
-                                 ] );
+            this._btnSubmitDom,
+        ] = this.querySelectors([
+            '#modal',
+            '#btnCancel',
+            'form',
+            '#Id',
+            '#Title',
+            '#Author',
+            '#Price',
+            '#btnSubmit',
+        ]);
 
-        this._btnCancelDom.addEventListener( 'click', () => {
+        this._btnCancelDom.addEventListener('click', () => {
             this._modalDom.Hide();
-        } );
+        });
 
-        this._formDom.addEventListener( 'submit', ( e ) => {
+        this._formDom.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const book = {
-                Id: Number( this._IdDom.value ),
+                Id: Number(this._IdDom.value),
                 Title: this._TitleDom.value,
                 Author: this._AuthorDom.value,
                 Price: this._PriceDom.value,
             };
+            
+            this._btnSubmitDom.ShowLoading();
 
-            this.dispatchCustomEvent( 'onSaveBook', { ...book } );
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    this.dispatchCustomEvent('onSaveBook', {...book});
+                    resolve();
+                }, 1000);
+            })
+
+            this._btnSubmitDom.HideLoading();
+            
+            alert('儲存成功');
 
             this._modalDom.Hide();
-        } );
+        });
 
     }
 
@@ -205,8 +218,9 @@ customElements.define( 'edit-book', class extends HTMLElement {
     _TitleDom = null;
     _AuthorDom = null;
     _PriceDom = null;
+    _btnSubmitDom = null;
 
-    Show = ( book ) => {
+    Show = (book) => {
         this._editBook = book;
 
         this._modalDom.Show();
@@ -217,4 +231,4 @@ customElements.define( 'edit-book', class extends HTMLElement {
         this._PriceDom.value = this._editBook.Price || '';
     };
 
-} );
+});

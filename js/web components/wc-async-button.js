@@ -39,14 +39,14 @@ window.customElements.define("wc-async-button", class extends HTMLElement {
         [this._wcBtnDom, this._btnTextDom, this._spinnerDom] = this.querySelectors([".wcBtn", "#btnText", ".spinner"]);
 
         this._wcBtnDom.setAttribute("type", this.type);
+        
+        this["class"]?.split(' ').forEach(c => this._wcBtnDom.classList.add(c));
+        this.removeAttribute("class");
+        
         this._wcBtnDom.classList.remove("hide");
         this._wcBtnDom.addEventListener("click", this._click);
 
         this._btnTextDom.innerText = text;
-
-        const height = this._btnTextDom.offsetHeight;
-        this._spinnerDom.style.width = `${height}px`;
-        this._spinnerDom.style.height = `${height}px`;
 
         this.removeAttribute('onclick');
     }
@@ -69,20 +69,38 @@ window.customElements.define("wc-async-button", class extends HTMLElement {
     get text() {
         return this.getAttribute("text");
     }
+    
+    get "class"() {
+        return this.getAttribute("class");
+    }
 
-    asyncClick = async () => {
-        throw new Error('not implement');
+    AsyncClick = async () => {
     };
 
     // functions
     _click = async (e) => {
+
+        const height = this._btnTextDom.offsetHeight;
+        this._spinnerDom.style.width = `${height}px`;
+        this._spinnerDom.style.height = `${height}px`;
+
         console.log(`click button: ${this._btnTextDom.innerText}`);
         this._spinnerDom.classList.remove('hide');
         this._wcBtnDom.setAttribute('disabled', 'disabled');
 
-        await this.asyncClick();
+        await this.AsyncClick();
 
         console.log('finished handler');
+        this._spinnerDom.classList.add('hide');
+        this._wcBtnDom.removeAttribute('disabled');
+    }
+    
+    ShowLoading = () => {
+        this._spinnerDom.classList.remove('hide');
+        this._wcBtnDom.setAttribute('disabled', 'disabled');
+    }
+    
+    HideLoading = () => {
         this._spinnerDom.classList.add('hide');
         this._wcBtnDom.removeAttribute('disabled');
     }
