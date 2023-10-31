@@ -77,7 +77,7 @@ customElements.define( "wc-s-pager", class extends HTMLElement {
 
         const pageLink = document.createElement( "a" );
         pageLink.className = "page-link";
-        pageLink.href = "#";
+        pageLink.href = "javascript:void(0);";
         pageLink.innerText = text;
         pageLink.onclick = () => {
             this.ToPage( pageNo );
