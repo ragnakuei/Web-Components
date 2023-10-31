@@ -1,12 +1,15 @@
-window.customElements.define( 'wc-button', class extends HTMLElement {
-    // lifecycle hooks
-    constructor() {
-        super();
-    }
+window.customElements.define(
+    "wc-button",
+    class extends HTMLElement {
+        // lifecycle hooks
+        constructor() {
+            super();
+        }
 
-    connectedCallback() {
+        connectedCallback() {
+            const text = this.innerText || this.text;
 
-        this.innerHTML = `
+            this.innerHTML = `
 <style nonce="123abc">
 
     .spinner {
@@ -25,8 +28,8 @@ window.customElements.define( 'wc-button', class extends HTMLElement {
     }
 
     @keyframes spin {
-      /*0% { transform: rotate(0deg); }*/
-      /*100% { transform: rotate(360deg); }*/
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     
 </style>
@@ -35,64 +38,56 @@ window.customElements.define( 'wc-button', class extends HTMLElement {
     <span class="spinner hide"></span>
     <span id="btnText"></span>
 </button>
-<button class="btnLoading hide">&nbsp;&nbsp;Loading</button>
     `;
-        [
-            this._wcBtnDom,
-            this._btnTextDom,
-            this._spinnerDom
-        ] = this.querySelectors( [
-                                     '.wcBtn',
-                                     '#btnText',
-                                     '.spinner',
-                                 ] );
+            [this._wcBtnDom, this._btnTextDom, this._spinnerDom] = this.querySelectors([".wcBtn", "#btnText", ".spinner"]);
 
-        this._btnTextDom.innerText = this.text;
+            this._wcBtnDom.setAttribute("type", this.type);
+            this._wcBtnDom.classList.remove("hide");
+            this._wcBtnDom.addEventListener("click", this._click);
 
-        this._wcBtnDom.setAttribute( 'type', this.type );
-        this._wcBtnDom.classList.remove( 'hide' );
-        this._wcBtnDom.addEventListener( 'click', this._click );
+            this._btnTextDom.innerText = text;
 
-        const height = this._wcBtnDom.offsetHeight - 12;
-        this._spinnerDom.style.width = `${ height }px`;
-        this._spinnerDom.style.height = `${ height }px`;
-    }
+            const height = this._btnTextDom.offsetHeight;
+            this._spinnerDom.style.width = `${height}px`;
+            this._spinnerDom.style.height = `${height}px`;
+            
+            this.removeAttribute('onclick');
+        }
 
-    // fields
-    _wcBtnDom = null;
-    _btnTextDom = null;
-    _spinnerDom = null;
+        // fields
+        _wcBtnDom = null;
+        _btnTextDom = null;
+        _spinnerDom = null;
 
-    // property
+        // property
 
-    get id() {
-        return this.getAttribute( 'id' );
-    }
+        get id() {
+            return this.getAttribute("id");
+        }
 
-    get type() {
-        return this.getAttribute( 'type' );
-    }
+        get type() {
+            return this.getAttribute("type");
+        }
 
-    get text() {
-        return this.getAttribute( 'text' );
-    }
+        get text() {
+            return this.getAttribute("text");
+        }
 
-    asyncClick = async () => {
-        await new Promise( resolve => setTimeout( resolve, 100 ) );
-        console.log( 'asyncClick' );
-    };
+        asyncClick = async () => {
+            throw new Error('not implement');
+        };
 
-    // functions
-    _click = async ( e ) => {
-        console.log( `click button: ${ this.text }` );
-        this._spinnerDom.classList.remove( 'hide' );
-        this._wcBtnDom.setAttribute( 'disabled', 'disabled' );
+        // functions
+        _click = async (e) => {
+            console.log(`click button: ${this._btnTextDom.innerText}`);
+            this._spinnerDom.classList.remove('hide');
+            this._wcBtnDom.setAttribute('disabled', 'disabled');
 
-        await this.asyncClick();
+            await this.asyncClick();
 
-        console.log( 'finished handler' );
-        this._spinnerDom.classList.add( 'hide' );
-        this._wcBtnDom.removeAttribute( 'disabled' );
-    }
+            console.log('finished handler');
+            this._spinnerDom.classList.add('hide');
+            this._wcBtnDom.removeAttribute('disabled');
+        }
 
-} )
+    })

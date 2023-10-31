@@ -11,6 +11,7 @@
         <!-- 
             如果不要給定 CSP style-src 的話，那就無法設定 Web Component 中的 Style，相對也無法使用 Shadow DOM + SLOT 了 !  
         -->
+
     </head>
     <body>
         <div class="container">
@@ -18,8 +19,8 @@
             <div class="d-flex flex-wrap">
                 <div>
 
-                    <wc-button type="text" id="btn1" text="Test"></wc-button>
-                    <wc-button type="submit" id="btn2" text="Submit"></wc-button>
+                    <wc-button type="button" id="btn1">Test</wc-button>
+                    <wc-button type="submit" id="btn2">Submit</wc-button>
 
                 </div>
             </div>
